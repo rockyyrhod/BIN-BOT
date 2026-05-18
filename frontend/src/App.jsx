@@ -3,7 +3,8 @@ import { io } from 'socket.io-client';
 import { motion } from 'framer-motion';
 import { Trash2, Activity, Wifi, Settings, Power } from 'lucide-react';
 
-const socket = io('http://localhost:3001');
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+const socket = io(BACKEND_URL);
 
 // Original un-scaled constants
 const LID_H  = 24;   // px — h-6
@@ -50,7 +51,8 @@ export default function App() {
     if (command === binState || isPublishing) return;
     setIsPublishing(true);
     try {
-      await fetch('http://localhost:3001/api/command', {
+      // FIXED: Uses dynamic BACKEND_URL template literal
+      await fetch(`${BACKEND_URL}/api/command`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ command }),
@@ -64,7 +66,8 @@ export default function App() {
   const clearLogs = async () => {
     setLogs([]);
     try {
-      await fetch('http://localhost:3001/api/logs', { method: 'DELETE' });
+      // FIXED: Uses dynamic BACKEND_URL template literal
+      await fetch(`${BACKEND_URL}/api/logs`, { method: 'DELETE' });
     } catch (error) {
       console.error('Failed to clear logs on server', error);
     }
@@ -100,17 +103,13 @@ export default function App() {
       {/* Top Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
 
-        {/* Animated Visualizer - Increased min-h to 450px for clearance */}
+        {/* Animated Visualizer */}
         <div className="lg:col-span-2 bg-slate-800/80 border border-slate-700/80 rounded-2xl p-8 flex flex-col items-center justify-center min-h-[450px] relative overflow-hidden shadow-xl">
 
           {/* Background glow */}
           <div className={`absolute w-96 h-96 blur-[120px] rounded-full transition-colors duration-1000 ${binState === 'OPEN' ? 'bg-emerald-500/20' : 'bg-transparent'}`} />
 
-          {/* * CONTAINER FIX:
-            * pt-[180px] explicitly reserves the ~185px of vertical space 
-            * the 192px lid needs to swing upwards at a 105-degree angle.
-            * This forces the flexbox to calculate the visual center lower down.
-            */}
+          {/* Container layout with vertical clearance adjustment */}
           <div className="relative z-10 pt-[180px] pb-8">
             <div
               className="relative"
@@ -272,7 +271,7 @@ export default function App() {
           </div>
 
           {/* Terminal */}
-          <div className="bg-slate-950 border border-slate-800 rounded-lg p-3 h-28 overflow-y-auto font-mono text-[11px] text-slate-400 space-y-2">
+          <div className="bg-slate-950 border border-slate-800 rounded-lg p-3 h-28 overflow-y-auto font-mono text-[11px] text-slate-400 space-y-2 custom-scrollbar">
             {logs.length === 0 && (
               <div className="text-slate-500">[SYSTEM BOOT] Real-time data pipeline tracking activated...</div>
             )}
