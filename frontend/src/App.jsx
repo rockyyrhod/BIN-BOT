@@ -266,7 +266,7 @@ export default function App() {
         <div className="flex items-center gap-2 md:gap-3">
           <Trash2 className="text-slate-400" size={20} />
           <h1 className="text-sm md:text-xl font-bold tracking-widest uppercase text-slate-100 flex flex-col md:flex-row md:items-baseline">
-            BINBOT <span className="text-slate-500 font-light text-[9px] md:text-sm mt-1 md:mt-0 md:ml-2">Commercial Terminal</span>
+            BINBOT <span className="text-slate-500 font-light text-[9px] md:text-sm mt-1 md:mt-0 md:ml-2">Commercial Compliance and Waste Logistices Terminal</span>
           </h1>
         </div>
         <div className="flex items-center gap-3">
